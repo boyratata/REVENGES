@@ -13,23 +13,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to attempt playing the video with sound
     function attemptAutoplay() {
         video.muted = false; // Attempt to play with sound
-        video.play().then(function() {
-            console.log('Video autoplay started with sound.');
-        }).catch(function(error) {
-            console.error('Video autoplay failed:', error);
-        });
+
+        // Try to play the video
+        var playPromise = video.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(function() {
+                console.log('Video autoplay started with sound.');
+            }).catch(function(error) {
+                console.error('Video autoplay failed:', error);
+                // Fallback: play after user interaction
+                document.addEventListener('click', function() {
+                    video.play().then(function() {
+                        console.log('Video playback started after user interaction.');
+                    }).catch(function(error) {
+                        console.error('Video playback still blocked after user interaction:', error);
+                    });
+                }, { once: true });
+            });
+        }
     }
 
     // Attempt autoplay immediately
     attemptAutoplay();
-
-    // Fallback if autoplay is blocked
-    video.addEventListener('pause', function() {
-        console.log('Video autoplay blocked.');
-
-        // Attempt to play again after a short delay
-        setTimeout(function() {
-            attemptAutoplay();
-        }, 1000); // Delay in milliseconds
-    });
 });
