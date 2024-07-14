@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     var video = document.createElement('video');
-    video.autoplay = true;
     video.loop = true;
-    video.muted = false; // Ensure video is not muted
     video.className = 'video-background';
 
     var source = document.createElement('source');
@@ -12,16 +10,26 @@ document.addEventListener('DOMContentLoaded', function () {
     video.appendChild(source);
     document.body.appendChild(video);
 
-    // Ensure video plays when unmuted
-    video.play().catch(function(error) {
-        console.error('Video playback was prevented:', error);
-        // Fallback: attempt to play again after user interaction
-        document.addEventListener('click', function() {
-            video.play().then(function() {
-                console.log('Video playback started after user interaction.');
-            }).catch(function(error) {
-                console.error('Video playback still prevented after user interaction:', error);
-            });
-        }, { once: true });
+    // Function to attempt playing the video with sound
+    function attemptAutoplay() {
+        video.muted = false; // Attempt to play with sound
+        video.play().then(function() {
+            console.log('Video autoplay started with sound.');
+        }).catch(function(error) {
+            console.error('Video autoplay failed:', error);
+        });
+    }
+
+    // Attempt autoplay immediately
+    attemptAutoplay();
+
+    // Fallback if autoplay is blocked
+    video.addEventListener('pause', function() {
+        console.log('Video autoplay blocked.');
+
+        // Attempt to play again after a short delay
+        setTimeout(function() {
+            attemptAutoplay();
+        }, 1000); // Delay in milliseconds
     });
 });
