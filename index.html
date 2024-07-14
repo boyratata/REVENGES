@@ -11,10 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
-            background-image: url('https://github.com/boyratata/REVENGES/blob/main/background.jpg?raw=true');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -22,12 +18,27 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow: hidden; /* Prevent scrollbars due to video size */
+            background: black; /* Fallback background color */
+        }
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            object-fit: cover; /* Ensure the video covers the entire screen */
         }
         .owner-section {
             text-align: center;
             padding: 20px;
             margin-bottom: 20px;
             color: #fff;
+            position: relative;
+            z-index: 1; /* Ensures content is above video */
         }
         .owner-section img {
             width: 200px;
@@ -50,6 +61,17 @@
             transition: color 0.3s ease-in-out;
         }
         .owner-section a:hover {
+            color: #7d0d9e;
+        }
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #9f13fe;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+        .back-to-home:hover {
             color: #7d0d9e;
         }
         .contributors-container {
@@ -116,27 +138,38 @@
         .contributor-info a:hover {
             color: #7d0d9e;
         }
-        .back-to-home {
+        .unmute-button {
             position: absolute;
             top: 20px;
-            left: 20px;
-            color: #9f13fe;
-            text-decoration: none;
-            transition: color 0.3s ease-in-out;
+            right: 20px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 1; /* Ensure button is above video */
+            border-radius: 50%; /* Rounded corners */
         }
-        .back-to-home:hover {
-            color: #7d0d9e;
+        .unmute-button i {
+            font-size: 24px;
+            filter: drop-shadow(0 0 0.75rem purple); /* Adds purple shadow effect */
         }
     </style>
 </head>
 <body>
+    <video id="videoBG" autoplay loop playsinline class="video-background" muted>
+        <source src="https://github.com/boyratata/REVENGES/raw/main/background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <button id="unmuteButton" class="unmute-button"><i class="fas fa-volume-up"></i></button>
+
     <div class="owner-section">
         <img src="https://cdn.discordapp.com/avatars/1218777412364406906/60cb1db42b6049a4818fb8f11b398aa8.webp?size=1024&format=webp&width=0&height=170" alt="Profile picture of Owner">
         <h1>Owner: 𝒜𝒟𝑀𝐼𝒩</h1>
         <p>Discord: <a href="https://discord.com/channels/1261913644250431518/1261913644745097229" target="_blank" class="text-purple-400 hover:text-purple-500 transition-colors">Profile</a></p>
     </div>
     
-    <a href="https://discord.com/channels/1261913644250431518/1261913644745097229" class="back-to-home"><i class="fa-solid fa-arrow-left"></i> SERVER</a>
+    <a href="https://discord.com/channels/1261913644250431518/1261913644745097229" class="back-to-home"><i class="fas fa-arrow-left"></i> SERVER</a>
     <main role="main">
         <div class="contributors-container">
             <div class="contributor-card">
@@ -153,11 +186,11 @@
                     <p class="text-xl font-semibold">Bella: 𝓣𝓱𝓮 𝓑𝓪𝓬𝓴𝓾𝓹</p>
                     <div>
                         <p>Discord: <a href="https://discord.com/users/836142241898430476" target="_blank" class="text-purple-400 hover:text-purple-500 transition-colors">Profile</a></p>
-                        <p><small>Youtube:</small> <a href="https://www.youtube.com/@MetaBellaOfficial" target="_blank" class="text-purple-400 hover:text-purple-500 transition-colors">YT</a></p>
+                        <p><small>Youtube:</small> <a href="https://www.youtube.com/watch?v=hHglIBOphrM" target="_blank" class="text-purple-400 hover:text-purple-500 transition-colors">YT</a></p>
                     </div>
                 </div>
             </div>
-            
+
             <div class="contributor-card">
                 <img src="https://cdn.discordapp.com/avatars/1150690292622704694/149217f38f9fb434d6ddb56806ed516a?size=1024" alt="Profile picture of Contributor 5">
                 <div class="contributor-info">
@@ -173,8 +206,22 @@
                     <p>Discord: <a href="https://discord.com/users/898929921076916234" target="_blank" class="text-purple-400 hover:text-purple-500 transition-colors">Profile</a></p>
                 </div>
             </div>
-            
         </div>
-    </main>
+    </main>	
+    <script>
+        // JavaScript to control video and mute button
+        const videoBG = document.getElementById('videoBG');
+        const unmuteButton = document.getElementById('unmuteButton');
+
+        unmuteButton.addEventListener('click', () => {
+            if (videoBG.muted) {
+                videoBG.muted = false;
+                unmuteButton.innerHTML = '<i class="fas fa-volume-mute"></i>'; // Icon for mute
+            } else {
+                videoBG.muted = true;
+                unmuteButton.innerHTML = '<i class="fas fa-volume-up"></i>'; // Icon for unmute
+            }
+        });
+    </script>
 </body>
 </html>
