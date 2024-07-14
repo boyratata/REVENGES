@@ -10,28 +10,22 @@ document.addEventListener('DOMContentLoaded', function () {
     video.appendChild(source);
     document.body.appendChild(video);
 
-    // Event listener for when enough of the video has loaded to play through
-    video.addEventListener('canplaythrough', function() {
-        video.muted = false; // Unmute the video
+    // Function to attempt playing the video with sound
+    function attemptAutoplay() {
+        video.muted = true; // Start muted to attempt autoplay
         video.play().then(function() {
             console.log('Video autoplay started with sound.');
+            video.muted = false; // Unmute after successful play
         }).catch(function(error) {
             console.error('Video autoplay failed:', error);
+
+            // Fallback: Retry after a short delay
+            setTimeout(function() {
+                attemptAutoplay();
+            }, 1000); // Delay in milliseconds (adjust as needed)
         });
-    });
+    }
 
-    // Attempt to play the video immediately
-    video.load(); // This may help trigger canplaythrough earlier
-
-    // Fallback: If canplaythrough doesn't trigger (very rare), try to play after a short delay
-    setTimeout(function() {
-        if (video.paused) {
-            video.muted = false; // Unmute the video
-            video.play().then(function() {
-                console.log('Video autoplay started with sound.');
-            }).catch(function(error) {
-                console.error('Video autoplay failed even after delay:', error);
-            });
-        }
-    }, 200); // Delay in milliseconds (adjust as needed)
+    // Attempt autoplay immediately
+    attemptAutoplay();
 });
