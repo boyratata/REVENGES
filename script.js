@@ -12,16 +12,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to attempt playing the video with sound
     function attemptAutoplay() {
-        video.muted = true; // Start muted to attempt autoplay
+        video.muted = false; // Attempt to play with sound
         video.play().then(function() {
             console.log('Video autoplay started with sound.');
-            video.muted = false; // Unmute after successful play
         }).catch(function(error) {
             console.error('Video autoplay failed:', error);
 
-            // Fallback: Retry after a short delay
+            // Fallback: Mute and retry after a short delay
+            video.muted = true;
             setTimeout(function() {
-                attemptAutoplay();
+                video.play().then(function() {
+                    console.log('Video playback started muted after delay.');
+                    video.muted = false; // Unmute after successful play
+                }).catch(function(error) {
+                    console.error('Video playback failed even after delay:', error);
+                });
             }, 1000); // Delay in milliseconds (adjust as needed)
         });
     }
